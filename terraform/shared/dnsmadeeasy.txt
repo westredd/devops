@@ -1,9 +1,0 @@
-#!/bin/bash
-sudo yum update -y
-sudo yum install nano -y
-sudo yum install perl -y
-sudo yum --enablerepo=extras install epel-release -y
-sudo yum install cpanspec -y
-sudo yum install perl-CPAN -y
-sudo perl -MCPAN -e "install Digest::HMAC_SHA1"
-sudo perl -MCPAN -e "install Config::Properties"
