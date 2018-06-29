@@ -1,0 +1,18 @@
+<powershell>
+start-sleep -s 5
+
+
+start-transcript -path C:\userdata.txt -noclobber -append 
+net user Administrator flytr4p!
+ac -Encoding UTF8  C:\Windows\system32\drivers\etc\hosts "20.200.33.110 ip-20-200-33-110.eu-west-2.compute.internal"
+
+new-item -Type directory c:\source
+Set-ExecutionPolicy unrestricted -Force
+iwr https://downloads.puppetlabs.com/windows/puppet5/puppet-agent-x64-latest.msi -OutFile c:\source\puppet-agent-x64-latest.msi
+start-sleep -seconds 60
+msiexec /i "c:\source\puppet-agent-x64-latest.msi" PUPPET_MASTER_SERVER="ip-20-200-33-110.eu-west-2.compute.internal" /qn /norestart
+
+
+stop-transcript 
+
+</powershell>

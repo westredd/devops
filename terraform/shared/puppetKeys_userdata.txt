@@ -1,0 +1,9 @@
+#Copy down public and private keys from parameter store service in AWS
+if (test-path $puppetRoot$puppetKeysLoc) {gci $puppetRoot$puppetKeysLoc | remove-item -force }
+else {new-item -type directory $puppetRoot$puppetKeysLoc}
+$base64EncPuppetPrivateKey = (Get-SSMParameterValue -withDecryption:$true -Name '${varSsmParamStorePuppetPrivateKeyName}').parameters."value"
+$base64DecPuppetPrivateKey = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($base64EncPuppetPrivateKey))
+[System.IO.File]::WriteAllLines("$puppetRoot$puppetKeysLoc\private_key.pkcs7.pem", $base64DecPuppetPrivateKey)
+$base64EncPuppetPublicKey = (Get-SSMParameterValue -withDecryption:$true -Name '${varSsmParamStorePuppetPublicKeyName}').parameters."value"
+$base64DecPuppetPublicKey = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($base64EncPuppetPublicKey))
+[System.IO.File]::WriteAllLines("$puppetRoot$puppetKeysLoc\public_key.pkcs7.pem", $base64DecPuppetPublicKey)

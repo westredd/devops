@@ -1,0 +1,240 @@
+#Terraform Version
+terraform {
+  required_version = "= 0.11.1"
+  backend "s3" {
+    bucket     = "mfd-terraform-state-dev"
+    key        = "terraform.tfstate"
+    region     = "eu-west-2"
+   lock_table = "mfd-terraform-state-lock"
+   acl        = "private"
+  }
+}
+
+variable "envNameTop" {
+  type    = "string"
+  default = "mfddev"
+}
+
+variable "envTypeTop" {
+  type    = "string"
+  default = "dev"
+}
+
+#Userdata Global Source
+data "template_file" "default_userdata" {
+    template = "${file("..\\..\\shared\\default_userdata.txt")}"
+	  vars {
+    varPuppetAgentDLLink                 = "${var.puppetDlLink}"
+    varEc2PuppetKmsRegion                = "${var.awsRegionTop}"
+    varPuppetS3KeyName                   = "${var.puppetS3KeyName}"
+    varSsmParamStorePuppetPrivateKeyName = "/${var.puppetKeysSsmParamLoc}/${var.puppetPrivateKeySsmParamLoc}"
+    varSsmParamStorePuppetPublicKeyName  = "/${var.puppetKeysSsmParamLoc}/${var.puppetPublicKeySsmParamLoc}"
+  }
+}
+
+
+#resource "aws_sns_topic" "ec2" {
+#  name 					= "ProdEc2Alert"
+#  display_name			= "INAProdEC2"  
+#}
+
+#Modules
+module "vpc" {
+  source            = "..\\..\\modules\\vpc"  
+  envName           = "${var.envNameTop}"
+  vpcCidr           = "20.200.32.0/21"
+
+
+  
+    privateSubnets    = [
+    "20.200.33.0/24",
+    "20.200.35.0/24"
+  ]
+  
+    publicSubnets     = [
+    "20.200.32.0/24",
+    "20.200.34.0/24"
+  ]
+  
+    availabilityZones = [
+    "eu-west-2a",
+    "eu-west-2b",
+    "eu-west-2c"
+  ]
+}
+
+module "routing" {
+  source            = "..\\..\\modules\\routing"  
+  cidr_block		= "0.0.0.0/0"
+  vpcId             = "${module.vpc.vpcId}"
+  igwId				= "${module.vpc.igwId}"
+  envName			= "${var.envNameTop}"
+  natGwId           = "${module.vpc.igwId}"	#"${module.vpc.natGwId}"
+#  propagatingVgw 	= ["${module.vpn.vpnGatewayId}"]
+
+
+ 
+  privateSubnetIds  = [
+    "${module.vpc.privateSubnetIds[0]}",
+    "${module.vpc.privateSubnetIds[1]}"
+  ]
+    publicSubnetIds   = [
+    "${module.vpc.publicSubnetIds[0]}",
+    "${module.vpc.publicSubnetIds[1]}"
+  ]
+}
+
+###DC Non Moduled for private IP and custom AMI
+#resource "aws_instance" "dc01" {
+#  ami           = "ami-e2decc86"
+#  instance_type = "t2.micro"
+#  key_name      = "mfd-dev"
+#  subnet_id     = "subnet-bab903c1"
+#  private_ip    = "20.200.33.165"
+#  vpc_security_group_ids = ["sg-f316419a"]  
+#   tags {
+#        Name = "DMFDAWSDC01"
+#    }
+#  }
+#
+#resource "aws_eip" "ip" {
+#    instance = "${aws_instance.dc01.id}"
+#}
+
+
+###EC2
+#module "ec2-dc01" {
+#    source					= "..\\..\\modules\\ec2"  
+#    amiId					= "ami-39746a5d"
+#    instanceType			= "t2.micro"
+#	envName          		= "${var.envNameTop}"
+#    subnetId				= "${module.vpc.privateSubnetIds[0]}"
+#	availabilityZone		= "eu-west-2a"
+#    keyName					= "${var.mfddev}"
+#    iamInstanceProfile   	= "${var.iamInstanceProfile}"
+#    userData             	= "${data.template_file.default_userdata.rendered}"
+#    securityGroups			=  ["${aws_security_group.managementTraffic.id}",
+#    ]
+#    terminProtect			= false
+#    addStatusCheck			= true 
+#	topicArn			   	= "${aws_sns_topic.ec2.arn}"
+#    rootVolumeType   		= "gp2"
+#    rootVolumeSize   		= "50"
+#	nameTag               	= "DMFDAWSDC01"
+#	environmentTag        	= "${var.envTypeTop}"
+#	environmentNameTag    	= "${var.envNameTop}"
+#	projectOrServiceTag   	= "mfd"
+#	roleTag               	= "dcservermfd"
+#	businessUnitTag       	= "nordicUnit"
+#	departmentTag         	= "nordicDept"
+#	costCodeTag           	= "94028185"
+#	powerOffCOB			 	= "No" 
+#   
+#   }
+   
+#module "ec2-rds01" {
+#    source					= "..\\..\\modules\\ec2"  
+#    amiId					= "ami-74819710"
+#    instanceType			= "t2.micro"
+#	envName          		= "${var.envNameTop}"
+#    subnetId				= "${module.vpc.privateSubnetIds[0]}"
+#	availabilityZone		= "eu-west-2a"
+#    keyName					= "${var.mfddev}"
+#    iamInstanceProfile   	= "${var.iamInstanceProfile}"
+#    userData             	= "${data.template_file.default_userdata.rendered}"
+#    securityGroups			=  ["${aws_security_group.managementTraffic.id}",
+#    ]
+#    terminProtect			= false
+#    addStatusCheck			= true 
+#	topicArn			   	= "${aws_sns_topic.ec2.arn}"
+#    rootVolumeType   		= "gp2"
+#    rootVolumeSize   		= "50"
+#	nameTag               	= "DMFDAWSRDS01"
+#	environmentTag        	= "${var.envTypeTop}"
+#	environmentNameTag    	= "${var.envNameTop}"
+#	projectOrServiceTag   	= "mfd"
+#	roleTag               	= "rdsservermfd"
+#	businessUnitTag       	= "nordicUnit"
+#	departmentTag         	= "nordicDept"
+#	costCodeTag           	= "94028185"
+#	powerOffCOB			 	= "No" 
+#   
+#   }
+
+module "ec2-web01" {
+    source					= "..\\..\\modules\\ec2"  
+    amiId					= "ami-39746a5d"
+    instanceType			= "t2.medium"
+	envName          		= "${var.envNameTop}"
+    subnetId				= "${module.vpc.privateSubnetIds[0]}"
+	availabilityZone		= "eu-west-2a"
+    keyName					= "${var.mfddev}"
+    iamInstanceProfile   	= "${var.iamInstanceProfile}"
+    userData             	= "${data.template_file.default_userdata.rendered}"
+    securityGroups			=  ["${aws_security_group.managementTraffic.id}",
+    ]
+    terminProtect			= false
+    addStatusCheck			= true 
+#	topicArn			   	= "arn:aws:sns:eu-west-2:313533373455:ProdEc2Alert" #"${aws_sns_topic.ec2.arn}"
+    rootVolumeType   		= "gp2"
+    rootVolumeSize   		= "50"
+	nameTag               	= "DMFDAWSWEB01"
+	environmentTag        	= "${var.envTypeTop}"
+	environmentNameTag    	= "${var.envNameTop}"
+	projectOrServiceTag   	= "mfd"
+	roleTag               	= "webservermfd"
+	businessUnitTag       	= "nordicUnit"
+	departmentTag         	= "nordicDept"
+	costCodeTag           	= "94028185"
+	powerOffCOB			 	= "No" 
+}   
+
+   
+   
+#Management Traffic Security Group
+resource "aws_security_group" "managementTraffic" {
+  name = "${var.envNameTop}-ManagementTraffic"
+	description = "Allows managemnent traffic from central VPC"
+  vpc_id     = "${module.vpc.vpcId}"
+  
+  tags {
+    Environment = "${var.envNameTop}"
+  }
+}
+
+resource "aws_security_group_rule" "allowAllFromMGMTWorkstation" {
+	type      = "ingress"
+	from_port = 0
+	to_port   = 65535
+	protocol  = "-1"
+  security_group_id = "${aws_security_group.managementTraffic.id}"
+  cidr_blocks = ["80.5.30.63/32",
+				 "82.38.91.134/32",
+				 "83.231.170.196/32"]
+}
+
+resource "aws_security_group_rule" "egress" {
+	type      = "egress"
+	from_port = 0
+	to_port   = 65535
+	protocol  = "-1"
+  security_group_id = "${aws_security_group.managementTraffic.id}"
+  cidr_blocks = ["0.0.0.0/0"]
+}
+
+resource "aws_security_group_rule" "allowAllFromVpcToDc" {
+	type      = "ingress"
+	from_port = 0
+	to_port   = 65535
+	protocol  = "-1"
+  security_group_id = "${aws_security_group.managementTraffic.id}"
+  cidr_blocks = ["20.200.32.0/21"]
+}
+
+
+
+
+
+	
+ 
+
