@@ -8,7 +8,7 @@ resource "aws_vpc" "management" {
 
 #Subnet
 resource "aws_subnet" "centralmanagement1c"{
-	availability_zone = "eu-west-1c"
+	availability_zone = "eu-west-2c"
 	vpc_id = "${aws_vpc.management.id}"
 	cidr_block = "10.200.82.0/24"
 	tags {
@@ -18,7 +18,7 @@ resource "aws_subnet" "centralmanagement1c"{
 }
 
 resource "aws_subnet" "centraldevops1a"{
-	availability_zone = "eu-west-1a"
+	availability_zone = "eu-west-2a"
 	vpc_id = "${aws_vpc.management.id}"
 	cidr_block = "10.200.83.0/24"
 	tags {
@@ -28,7 +28,7 @@ resource "aws_subnet" "centraldevops1a"{
 }
 
 resource "aws_subnet" "centralmanagement1a"{
-	availability_zone = "eu-west-1a"
+	availability_zone = "eu-west-2a"
 	vpc_id = "${aws_vpc.management.id}"
 	cidr_block = "10.200.80.0/24"
 	tags {
@@ -38,7 +38,7 @@ resource "aws_subnet" "centralmanagement1a"{
 }
 
 resource "aws_subnet" "centralpublicaccess1b"{
-	availability_zone = "eu-west-1b"
+	availability_zone = "eu-west-2b"
 	vpc_id = "${aws_vpc.management.id}"
 	cidr_block = "10.200.85.0/24"
 	tags {
@@ -48,7 +48,7 @@ resource "aws_subnet" "centralpublicaccess1b"{
 }
 
 resource "aws_subnet" "centralmanagement1b"{
-	availability_zone = "eu-west-1b"
+	availability_zone = "eu-west-2b"
 	vpc_id = "${aws_vpc.management.id}"
 	cidr_block = "10.200.81.0/24"
 	tags {
@@ -58,7 +58,7 @@ resource "aws_subnet" "centralmanagement1b"{
 }
 
 resource "aws_subnet" "centralpublicaccess1a"{
-	availability_zone = "eu-west-1a"
+	availability_zone = "eu-west-2a"
 	vpc_id = "${aws_vpc.management.id}"
 	cidr_block = "10.200.84.0/24"
 	tags {
@@ -68,7 +68,7 @@ resource "aws_subnet" "centralpublicaccess1a"{
 }
 
 resource "aws_subnet" "centralpublicaccess1c"{
-	availability_zone = "eu-west-1c"
+	availability_zone = "eu-west-2c"
 	vpc_id = "${aws_vpc.management.id}"
 	cidr_block = "10.200.86.0/24"
 	tags {
