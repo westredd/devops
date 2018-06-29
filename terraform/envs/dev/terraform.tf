@@ -190,7 +190,7 @@ module "ec2-win01" {
 	businessUnitTag       	= "nordicUnit"
 	departmentTag         	= "nordicDept"
 	costCodeTag           	= "94032060"
-	powerOffCOB			 	= "No" 
+	powerOffCOB			 	= "Yes" 
 } 
 
 module "ec2-win02" {
