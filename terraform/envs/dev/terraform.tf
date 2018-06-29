@@ -238,7 +238,7 @@ module "ec2-win03" {
 #	topicArn			   	= "arn:aws:sns:eu-west-2:313533373455:ProdEc2Alert" #"${aws_sns_topic.ec2.arn}"
     rootVolumeType   		= "gp2"
     rootVolumeSize   		= "50"
-	nameTag               	= "DDEVOPAWSWIN03"
+	nameTag               	= "DDEVOPAWSWIN04"
 	environmentTag        	= "${var.envTypeTop}"
 	environmentNameTag    	= "${var.envNameTop}"
 	projectOrServiceTag   	= "mfd"
