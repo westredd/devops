@@ -1,5 +1,5 @@
-#variable "vpcCidr" {}
-#variable "envName" {}
+variable "vpcCidr" {}
+variable "envName" {}
 #
 #variable "publicSubnets" {
 #  type = "list"
