@@ -221,6 +221,35 @@ module "ec2-win02" {
 	powerOffCOB			 	= "No" 
 } 
 
+module "ec2-win03" {
+    source					= "..\\..\\modules\\ec2"  
+    amiId					= "ami-8f41a3e8"  
+    instanceType			= "t2.micro"
+	envName          		= "${var.envNameTop}"
+    subnetId				= "${module.vpc.privateSubnetIds[0]}"
+	availabilityZone		= "eu-west-2a"
+    keyName					= "${var.mfddev}"
+    iamInstanceProfile   	= "${var.iamInstanceProfile}"
+    userData             	= "${data.template_file.default_userdata.rendered}"
+    securityGroups			=  ["${aws_security_group.managementTraffic.id}",
+    ]
+    terminProtect			= false
+    addStatusCheck			= true 
+#	topicArn			   	= "arn:aws:sns:eu-west-2:313533373455:ProdEc2Alert" #"${aws_sns_topic.ec2.arn}"
+    rootVolumeType   		= "gp2"
+    rootVolumeSize   		= "50"
+	nameTag               	= "DDEVOPAWSWIN03"
+	environmentTag        	= "${var.envTypeTop}"
+	environmentNameTag    	= "${var.envNameTop}"
+	projectOrServiceTag   	= "mfd"
+	roleTag               	= "webservermfd"
+	businessUnitTag       	= "nordicUnit"
+	departmentTag         	= "nordicDept"
+	costCodeTag           	= "94032060"
+	powerOffCOB			 	= "No" 
+} 
+
+
 
 
 
