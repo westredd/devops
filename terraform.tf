@@ -83,6 +83,7 @@ resource "aws_subnet" "centralpublicaccess1c"{
 resource "aws_internet_gateway" "CentralManagement" {
 	vpc_id = "${aws_vpc.management.id}"
 	tags {
-		Name = "igw_centralManagement"
+		Name = "centralManagement"
 	}
 }
+
