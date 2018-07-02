@@ -1,3 +1,10 @@
+#Variables
+
+variable "grpCidr" {
+  description = "A unique name for your resources"
+}
+
+
 #VPC
 resource "aws_vpc" "management" {
   cidr_block = "${var.grpCidr}"  #"10.200.80.0/21" 
