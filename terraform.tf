@@ -90,7 +90,7 @@ resource "aws_internet_gateway" "CentralManagement" {
 resource "aws_instance" "vault" {
   ami           = "ami-629a7405"
   instance_type = "t2.micro"
-  key_name      = "CCS-Main"
+  key_name      = "mfd-key"
   subnet_id     = "${aws_subnet.centralmanagement1a.id}"
   private_ip    = "10.200.80.50"
   associate_public_ip_address = true
