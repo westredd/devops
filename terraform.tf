@@ -83,7 +83,7 @@ resource "aws_route_table" "MGT-Private" {
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = "${var.CentralManagement}"
+    gateway_id = "${aws_internet_gateway.CentralManagement.id}"
   }
 }  
   
