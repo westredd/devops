@@ -69,7 +69,7 @@ resource "aws_security_group_rule" "sg_mgmt-1" {
   from_port         = 0
   to_port           = 0
   protocol          = "-1"
-  security_group_id = "${aws_security_group.Ppres.id}"
+  security_group_id = "${aws_security_group.sg_mgmt.id}"
 
   cidr_blocks = [
     "0.0.0.0/0",
