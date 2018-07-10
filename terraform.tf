@@ -78,10 +78,19 @@ resource "aws_subnet" "centralpublicaccess1c"{
 }
 
 #routes
+resource "aws_route_table" "MGT-Private" {
+  vpc_id = "${aws_vpc.management.id}"
+
   route {
     cidr_block = "0.0.0.0/0"
     gateway_id = "${var.CentralManagement}"
   }
+}  
+  
+resource "aws_route_table_association" "MGT-Private-centralmanagement1a" {
+  subnet_id      = "${aws_subnet.centralmanagement1a.id}"
+  route_table_id = "${aws_route_table.MGT-Private.id}"
+}  
 
 #IGW
 resource "aws_internet_gateway" "CentralManagement" {
