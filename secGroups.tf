@@ -26,6 +26,7 @@ resource "aws_security_group_rule" "sg_prodvaultServers_allow8200FromProdAppAlb"
   security_group_id        = "${aws_security_group.sg_prodvaultServers.id}"
   cidr_blocks = [
     "${var.cexLan}",
-    "${var.homeWorker}",,
+    "${var.homeWorker}",
+	"10.60.70.0/24",
   ]
 }
