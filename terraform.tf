@@ -77,7 +77,11 @@ resource "aws_subnet" "centralpublicaccess1c"{
 
 }
 
-
+#routes
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = "${var.CentralManagement}"
+  }
 
 #IGW
 resource "aws_internet_gateway" "CentralManagement" {
@@ -86,6 +90,8 @@ resource "aws_internet_gateway" "CentralManagement" {
 		Name = "centralManagement"
 	}
 }
+
+
 
 resource "aws_instance" "vault" {
   ami           = "ami-629a7405"
