@@ -30,3 +30,36 @@ resource "aws_security_group_rule" "sg_prodvaultServers_allow8200FromProdAppAlb"
 	"10.60.70.0/24",
   ]
 }
+
+resource "aws_security_group" "sg_mgmt" {
+  name        = "sg_mgmt"
+  description = "Management Access"
+  vpc_id      = "${aws_vpc.management.id}"
+
+  tags {
+    Name                = "sg_mgmt"
+    environment         = "prod"
+    uHostname           = ""
+    uProjectOrService   = "Central Management"
+    rEnvironment        = "Production"
+    rBusinessUnit       = "CCS"
+    rDepartment         = "CCS"
+    rEnvironmentName    = "prod"
+    oEnvironment        = ""
+    oOctopusEnvironment = ""
+    rPONumber           = "94028184"
+  }
+}
+
+resource "aws_security_group_rule" "sg_mgmt" {
+  type                     = "ingress"
+  from_port                = 3389
+  to_port                  = 3389
+  protocol                 = "tcp"
+  security_group_id        = "${aws_security_group.sg_mgmt.id}"
+  cidr_blocks = [
+    "80.5.30.63/32",
+    "83.231.170.196/32",
+
+  ]
+}
