@@ -122,7 +122,7 @@ resource "aws_instance" "vault" {
     oEnvironment        = "Prod"
     uRole               = "RDS 2012 License Server"
     oOctopusEnvironment = "na"
-    oOtopusRole         = "na"
+    oOtopusRole         = "naa"
     rPONumber           = "94029794"
   }
 
