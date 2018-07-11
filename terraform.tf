@@ -102,41 +102,41 @@ resource "aws_internet_gateway" "CentralManagement" {
 
 
 
-#resource "aws_instance" "vault" {
-#  ami           = "ami-629a7405"
-#  instance_type = "t2.micro"
-#  key_name      = "mfd-key"
-#  subnet_id     = "${aws_subnet.centralmanagement1a.id}"
-#  private_ip    = "10.200.80.50"
-#  associate_public_ip_address = true
-#
-#  vpc_security_group_ids = ["${aws_security_group.sg_mgmt.id}",
-#  ]
-#
-#  tags {
-#    Name                = "DDEVOPSAWSVLT01"
-#    rbusinessUnit       = "INA"
-#    rDepartment         = "S&I"
-#    uProjectOrService   = "Nordic"
-#    rEnvironment        = "Prod"
-#    oEnvironment        = "Prod"
-#    uRole               = "RDS 2012 License Server"
-#    oOctopusEnvironment = "na"
-#    oOtopusRole         = "na"
-#    rPONumber           = "94029794"
-#  }
-#
-#  root_block_device {
-#    volume_type = "gp2"
-#    volume_size = "50"
-#  }
-#  
-#  lifecycle {
-#    ignore_changes = [
-#      "user_data",
-#      "ami",
-#    ]
-#  }  
-#
-#}
+resource "aws_instance" "vault" {
+  ami           = "ami-629a7405"
+  instance_type = "t2.micro"
+  key_name      = "mfd-key"
+  subnet_id     = "${aws_subnet.centralmanagement1a.id}"
+  private_ip    = "10.200.80.50"
+  associate_public_ip_address = true
+
+  vpc_security_group_ids = ["${aws_security_group.sg_mgmt.id}",
+  ]
+
+  tags {
+    Name                = "DDEVOPSAWSVLT01"
+    rbusinessUnit       = "INA"
+    rDepartment         = "S&I"
+    uProjectOrService   = "Nordic"
+    rEnvironment        = "Prod"
+    oEnvironment        = "Prod"
+    uRole               = "RDS 2012 License Server"
+    oOctopusEnvironment = "na"
+    oOtopusRole         = "na"
+    rPONumber           = "94029794"
+  }
+
+  root_block_device {
+    volume_type = "gp2"
+    volume_size = "50"
+  }
+  
+  lifecycle {
+    ignore_changes = [
+      "user_data",
+      "ami",
+    ]
+  }  
+
+}
 
