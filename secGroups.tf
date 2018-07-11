@@ -76,7 +76,7 @@ resource "aws_security_group_rule" "sg_mgmt-1" {
   ]
 }
 
-resource "aws_security_group_rule" "sg_mgmt-1" {
+resource "aws_security_group_rule" "sg_mgmt-2" {
   type              = "ingress"
   from_port         = 80
   to_port           = 80
