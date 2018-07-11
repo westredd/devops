@@ -75,3 +75,15 @@ resource "aws_security_group_rule" "sg_mgmt-1" {
     "0.0.0.0/0",
   ]
 }
+
+resource "aws_security_group_rule" "sg_mgmt-1" {
+  type              = "ingress"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
+  security_group_id = "${aws_security_group.sg_mgmt.id}"
+
+  cidr_blocks = [
+    "0.0.0.0/0",
+  ]
+}
